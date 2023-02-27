@@ -2,6 +2,7 @@
 
 namespace TelegramRSS;
 
+use Amp\Http\Server\RequestHandler;
 use Exception;
 use OpenSwoole\Http\Request;
 use OpenSwoole\Http\Response;
@@ -115,13 +116,9 @@ class Controller {
      */
     private function route(Request $request): self {
         //nginx proxy pass ?? custom header ?? default value
-        $this->request['ip'] = $request->header['x-real-ip']
-            ??
-            $request->header['remote_addr']
-            ??
-            $request->server['x-forwarded-for']
-            ??
-            $request->server['remote_addr']
+        $this->request['ip'] = $request->server['remote_addr']
+            ?? $request->server['x-real-ip']
+            ?? explode(',' , $request->server['x-forwarded-for'] ?? '', 1)[0]
         ;
         $this->request['url'] = $request->server['request_uri'] ?? $request->server['path_info'] ?? '';
         $path = array_values(array_filter(explode('/', $request->server['request_uri'])));

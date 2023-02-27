@@ -1,13 +1,12 @@
-FROM php:8.2-cli
+FROM php:8.2.1-cli
 
-RUN apt-get update \
-    && apt-get install git zip libzip-dev libssl-dev -y \
+RUN apt-get update && apt-get upgrade -y
+RUN apt-get install git zip libzip-dev libssl-dev -y \
     # Install additional extension \
-    && docker-php-ext-install -j$(nproc) sockets zip \
+    && docker-php-ext-install -j$(nproc) sockets zip pcntl \
     && mkdir -p /usr/src/php/ext/ && cd /usr/src/php/ext/ \
-    && pecl bundle openswoole \
-    && docker-php-ext-configure openswoole --enable-openssl=yes \
-    && docker-php-ext-install -j$(nproc) openswoole \
+	&& pecl bundle ev \
+	&& docker-php-ext-install -j$(nproc) ev \
     # Cleanup
     && docker-php-source delete \
     && apt-get autoremove --purge -y && apt-get autoclean -y && apt-get clean -y \

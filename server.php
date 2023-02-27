@@ -1,5 +1,8 @@
 <?php
 
+use TelegramRSS\Client;
+use TelegramRSS\Server\Server;
+
 if (PHP_SAPI !== 'cli') {
     throw new \RuntimeException('Start in CLI');
 }
@@ -50,5 +53,5 @@ Example:
 
 require_once __DIR__ . '/bootstrap.php';
 
-$client = new \TelegramRSS\Client($options['client-address'], $options['client-port']);
-new \TelegramRSS\Server($client, $options['server-address'], $options['server-port']);
+$client = new Client($options['client-address'], $options['client-port']);
+new Server($client, $options['server-address'], $options['server-port']);
